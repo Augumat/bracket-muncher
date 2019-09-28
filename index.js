@@ -29,6 +29,26 @@ request({uri: process.argv[2]}, (error, response, body) => {
     .slice(47)
   ).matches_by_round;
 
+  // Prune unnecessary information
+  Object.keys(data).forEach(round => {
+    data[round] = data[round].map(x => {
+      return {
+        round: x.round,
+        players: [
+          {
+            tag: x.player1.display_name,
+            seed: x.player1.seed
+          },
+          {
+            tag: x.player2.display_name,
+            seed: x.player2.seed
+          }
+        ],
+        scores: x.scores
+      };
+    });
+  });
+
   // Log the output
   fs.writeFile('./out/body.json', JSON.stringify(data));
 });
