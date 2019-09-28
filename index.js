@@ -5,18 +5,7 @@ if (process.argv.length < 3) {
   throw new Error('No URL specified');
 }
 
-
-
-
-
-
-//console.log(`window._initialStoreState['TournamentStore'] = `.length);
-
-
-
-
 request({uri: process.argv[2]}, (error, response, body) => {
-
   // Grab the bracket data from the body of the response
   let data = JSON.parse(body
     // Get the CDATA chunks
@@ -29,7 +18,7 @@ request({uri: process.argv[2]}, (error, response, body) => {
     .slice(47)
   ).matches_by_round;
 
-  // Prune unnecessary information
+  // Prune unnecessary information and fill out the abbreviated templates
   Object.keys(data).forEach(round => {
     data[round] = data[round].map(x => {
       return {
@@ -37,26 +26,22 @@ request({uri: process.argv[2]}, (error, response, body) => {
         players: [
           {
             tag: x.player1.display_name,
-            seed: x.player1.seed
+            seed: x.player1.seed,
+            score: x.scores[0]
           },
           {
             tag: x.player2.display_name,
-            seed: x.player2.seed
+            seed: x.player2.seed,
+            score: x.scores[1]
           }
-        ],
-        scores: x.scores
+        ]
       };
     });
   });
 
-  // Log the output
+  // Flatten data into a list of matches
+  data = [].concat.apply([], Object.keys(data).map(round => data[round]));
+
+  // Write the result to the output file
   fs.writeFile('./out/body.json', JSON.stringify(data));
 });
-
-//split 1 : //<![CDATA[
-//split 2 : //]]>
-//  and take [0] from each
-//pick one that starts with `\nif (window._initialStoreState === undefined)`
-
-//split by semicolons and take the 3rd statement [2]
-//cutoff front of assignment to just leave the JSON data for the bracket display
