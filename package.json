@@ -3,9 +3,6 @@
   "version": "1.0.0",
   "description": "Takes a url to a Challonge page and converts it into a list of sets and the people who played them",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Augumat/bracket-muncher.git"
@@ -16,7 +13,6 @@
     "scraping"
   ],
   "author": "Aug",
-  "license": "ISC",
   "bugs": {
     "url": "https://github.com/Augumat/bracket-muncher/issues"
   },
